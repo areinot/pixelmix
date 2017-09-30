@@ -1,0 +1,23 @@
+<html>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<head>
+	<title>gif mixer</title>
+	<script src="pixelmix.js"></script> 
+</head>
+<body bgcolor="#42F">
+	<div>
+		<input id="mypano-slider" type="range" min="0" max="100" value="50" style="width: 100%"/>
+	</div>
+	<div class="pixel-mix" id="mypano" style="width: 980px; height: 980px; border: 1px solid white">
+		<img src="data/panohdri_00.png" width="100%" height="auto"/>
+		<img src="data/panohdri_02.png"/>
+		<img src="data/panohdri_04.png"/>
+		<img src="data/panohdri_06.png"/>
+		<img src="data/panohdri_08.png"/>
+		<img src="data/panohdri_10.png"/>
+		<img src="data/panohdri_12.png"/>
+	</div>
+	<script>PixelMix.initDOM();</script>
+</body>
+</html>
