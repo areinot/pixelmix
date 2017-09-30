@@ -21,23 +21,22 @@ class PixelMix { //@@@ extends HTMLElement {
 		if(element) {
 			this.element = element;
 			this.element.style = element.style || {};
-			this.images = element.getElementsByTagName("img") || [];
+			this.element.style.overflow = "hidden";
 
-			//this.element.style.overflow = "hidden";
-
-			//TODO: attributes
-			// var x = element.getAttribute("canvasX");
-			// var width = Number.parseInt(element.getAttribute("width"));
+			for(var i=0; i<this.element.children.length; ++i) {
+				var child = this.element.children[i];
+				if(child.tagName.toLowerCase() == "img") this.images.push(child);
+			}			
 		} else {
 			console.error("Pixel-Mix Error: No parent DOM element found.");
 			return;
 		}
 
-		if(this.images.length > 0) {
-			//make sure the div or whatever can fit our images
+		if(this.images.length > 0) {			
 			for(var i=0; i<this.images.length; i++) {
 				var img = this.images[i];
-				img.style = img.style || {};				
+				img.style = img.style || {};
+				this._noselect(img.style);
 				img.style.opacity = 1.0;
 				img.style.visibility = "hidden";
 				if(i == 0) {
@@ -45,8 +44,6 @@ class PixelMix { //@@@ extends HTMLElement {
 				} else {
 					img.style.position = "absolute";
 				}
-				this._fixImageSize(img);
-				this._noselect(img.style);
 			}			
 		}
 		else
@@ -65,7 +62,6 @@ class PixelMix { //@@@ extends HTMLElement {
 
 		//TODO: throttle this
 		window.addEventListener("resize", function(ev) {
-			return;
 			if(this.images && this.images.length) {
 				this._fixImageSize(this.images[this.imageA]);
 				this._fixImageSize(this.images[this.imageB]);
@@ -84,7 +80,7 @@ class PixelMix { //@@@ extends HTMLElement {
 			}.bind(this));
 		}
 
-		this.pickImageByFraction(0.5);	
+	 	this.pickImageByFraction(0.5);
 	}
 
 	pickImageByFraction(t) {
@@ -118,16 +114,24 @@ class PixelMix { //@@@ extends HTMLElement {
 	}
 
 	static initDOM() {
-		var mixers = [];
-		Array.prototype.filter.call( document.getElementsByTagName("pixel-mix"), function(el) {
-			this.push(new PixelMix(el));
-		}.bind(mixers));
 
-		Array.prototype.filter.call( document.getElementsByClassName("pixel-mix"), function(el) {
-			this.push(new PixelMix(el));
-		}.bind(mixers));
+		//NOTE: This is run after the whole page is done loading, so as to prevent DOM weirdness
+		//TODO: There might be a better solution for this. Like for instance canvas rendering
+	  	var data = {};
+	  	data.dothething=function() {
+			data.mixers = [];
+			Array.prototype.filter.call( document.getElementsByTagName("pixel-mix"), function(el) {
+				this.push(new PixelMix(el));
+			}.bind(this.mixers));
+			Array.prototype.filter.call( document.getElementsByClassName("pixel-mix"), function(el) {
+				this.push(new PixelMix(el));
+			}.bind(this.mixers));
+			window.removeEventListener("load", this.dothething);
+		}.bind(data);
 
-		return mixers;
+		window.addEventListener("load", data.dothething);
+
+		return data.mixers;
 	}
 
 	//helper nonsense
@@ -140,9 +144,10 @@ class PixelMix { //@@@ extends HTMLElement {
 	}
 
 	_fixImageSize(img) {
-		if(img !== this.images[0]) {
+		if(img !== this.images[0]) {			
 			var rect = this.images[0].getBoundingClientRect();
-			console.log(rect);
+			if( rect.top == rect.bottom || rect.left == rect.right ) return;
+
 			img.style.left = rect.left;
 			img.style.top =  rect.top;
 			img.style.width =  Math.abs(rect.right - rect.left);
