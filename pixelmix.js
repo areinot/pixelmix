@@ -40,7 +40,7 @@ class PixelMix { //@@@ extends HTMLElement {
 				img.style.opacity = 1.0;
 				img.style.visibility = "hidden";
 				if(i == 0) {
-					img.style.position = "relative";
+					img.style.position = "relative";					
 				} else {
 					img.style.position = "absolute";
 				}
@@ -78,9 +78,8 @@ class PixelMix { //@@@ extends HTMLElement {
 			this.slider.addEventListener("input", function(ev) {				
 				this.pickImageByFraction(this.slider.value * 0.01);
 			}.bind(this));
-		}
-
-	 	this.pickImageByFraction(0.5);
+		}		
+		this.pickImageByFraction(0.5);
 	}
 
 	pickImageByFraction(t) {
@@ -114,9 +113,8 @@ class PixelMix { //@@@ extends HTMLElement {
 	}
 
 	static initDOM() {
-
-		//NOTE: This is run after the whole page is done loading, so as to prevent DOM weirdness
-		//TODO: There might be a better solution for this. Like for instance canvas rendering
+		//NOTE: This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
+		//TODO: There might be a better solution for this. Like for instance canvas rendering.
 	  	var data = {};
 	  	data.dothething=function() {
 			data.mixers = [];
@@ -128,9 +126,7 @@ class PixelMix { //@@@ extends HTMLElement {
 			}.bind(this.mixers));
 			window.removeEventListener("load", this.dothething);
 		}.bind(data);
-
 		window.addEventListener("load", data.dothething);
-
 		return data.mixers;
 	}
 
