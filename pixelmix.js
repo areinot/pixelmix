@@ -41,8 +41,10 @@ class PixelMix { //@@@ extends HTMLElement {
 		
 		//CANVAS
 		this.frame = document.createElement('div');		
-		this.frame.style.width = "100%";
-		this.frame.style.height = "100%";
+		this.frame.style.left =
+		this.frame.style.right =
+		this.frame.style.top =
+		this.frame.style.bottom = 0;
 		this.element.insertBefore(this.frame, this.element.firstChild);
 
 
