@@ -1,154 +1,128 @@
+fancyMod=function(a,b) { return (a%b+b)%b; } //modulo that handles negative numbers properly, e.g. -1 % 4 = 3
+fancyDefined=function(v) { return v !== undefined && v !== null; }
 
 class PixelMix { //@@@ extends HTMLElement {
 	constructor(element) {
 		//@@@ super(); 
 		
 		//VARS
-
-		//Note: init is optionally separate from the constructor to better time when DOM creation and loading callbacks happen.
-		//For example an oncomplete callback may want to reference "this" but constructors are run in a limbo state where "this"
-		//is not yet defined.
-		this.element = null;
-		this.slider = null;
-		this.images = [];
-		this.imageA = 0;		//lesser image index
-		this.imageB = 0;		//next image index
-		this.imageT = 0.0;		//interpolant between the first image and the last
+		this.element = null;		//parent DOM element, editable by CSS and user
+		this.frame = null;			//^ canvas frame DOM element, used to measure exact contents of parent
+		this.canvas = null;			//  ^ canvas DOM element
+		this.context = null;		//    ^ canvas context
+		
+		this.images = [];		//array of Image objects (not in DOM)
+		this.imageA = null;		//lesser image object
+		this.imageB = null;		//next image object
 		this.blendT = 0.0;		//interpolant between image A and image B
 
-		//DOM
-
-		if(element) {
-			this.element = element;
-			this.element.style = element.style || {};
-			this.element.style.overflow = "hidden";
-
-			for(var i=0; i<this.element.children.length; ++i) {
-				var child = this.element.children[i];
-				if(child.tagName.toLowerCase() == "img") this.images.push(child);
-			}			
-		} else {
-			console.error("Pixel-Mix Error: No parent DOM element found.");
-			return;
-		}
-
-		if(this.images.length > 0) {			
-			for(var i=0; i<this.images.length; i++) {
-				var img = this.images[i];
-				img.style = img.style || {};
-				this._noselect(img.style);
-				img.style.opacity = 1.0;
-				img.style.visibility = "hidden";
-				if(i == 0) {
-					img.style.position = "relative";					
-				} else {
-					img.style.position = "absolute";
-				}
-			}			
-		}
-		else
-		{
-			console.error("Pixel-Mix Error: Parent DOM element needs at least one image element.");
-			return;
-		}	
+		this.slider = null;		//external slider DOM element, if specified
+		this.sliderT = 0.5;		//interpolant between the first image and the last
 		
-		//EVENTS
+		//DOM	
+		if(!fancyDefined(element)) {
+			console.error("Pixel-Mix Error: No DOM element found.");
+			return;
+		}
+		this.element = element;
 
-		this.element.addEventListener("click", function(ev) {			
-			var t = this.imageT + 0.05;
-			if(t > 1.0) t -= 1.0;
-			this.pickImageByFraction(t);
-		}.bind(this));		
+		//IMAGES		
+		var imagesAttrib = this.element.getAttribute("images");
+		if(!fancyDefined(imagesAttrib)) {
+			console.error("Pixel-Mix Error: HTML tag has invalid/missing 'images' property.");
+			return;
+		}
+		var imageList = JSON.parse(imagesAttrib);
+		for(var i=0; i<imageList.length; ++i) {
+			var img = new Image();
+			img.src = imageList[i]; //triggers load
+			this.images.push(img);			
+		}
+		
+		//CANVAS
+		this.frame = document.createElement('div'); 
+		this.frame.style = { width:"100%", height:"100%" };
+		this.element.insertBefore(this.frame, this.element.firstChild);
 
-		//TODO: throttle this
-		window.addEventListener("resize", function(ev) {
-			if(this.images && this.images.length) {
-				this._fixImageSize(this.images[this.imageA]);
-				this._fixImageSize(this.images[this.imageB]);
-			}
-		}.bind(this));
-
+		this.canvas = document.createElement('canvas');
+		this.context = this.canvas.getContext('2d');
+		this.frame.appendChild(this.canvas);
+				
 		//SLIDER
+		this.slider = this.element.getAttribute("slider-id");
+		if(fancyDefined(this.slider)) {
+			this.slider = document.getElementById(this.slider);
+			if(fancyDefined(this.slider)) {
+				this.slider.min = 0;
+				this.slider.max = 100;
+				this.slider.value = this.slider.max * this.sliderT;		
+				this.slider.addEventListener("input", function(ev) {				
+					this.setMix(this.slider.value * 0.01);
+				}.bind(this));
+			}
+		}
 
-		if( this.element.id !== undefined && this.element.id !== null) {
-			this.slider = document.getElementById(this.element.id + "-slider");
-			this.slider.min = 0;
-			this.slider.max = 100;
-			this.slider.value = 50;		
-			this.slider.addEventListener("input", function(ev) {				
-				this.pickImageByFraction(this.slider.value * 0.01);
-			}.bind(this));
-		}		
-		this.pickImageByFraction(0.5);
+		//FINALIZE
+		//pick images and make sure they draw once the resources are loaded
+		this.setMix(this.sliderT);
+
+		//EVENTS		
+		window.addEventListener("load", 		function(ev) { this._resize(); }.bind(this));
+		window.addEventListener("resize",		function(ev) { this._resize(); }.bind(this)); //TODO: throttle this?
+		this.imageA.addEventListener("load", 	function(ev) { this._resize(); }.bind(this)); //draw when the first two images finish loading
+		this.imageB.addEventListener("load", 	function(ev) { this._resize(); }.bind(this));
 	}
 
-	pickImageByFraction(t) {
-		this.images[this.imageA].style.visibility =
-		this.images[this.imageB].style.visibility = "hidden";
-
+	setMix(t) {
 		t = Math.max(0.0, Math.min(t, 1.0));
 		var span = this.images.length-1;
-		this.imageA = Math.floor(t * span);
-		this.imageB = Math.min(this.imageA + 1, span + 1);
-		this.blendT = (t * span) - this.imageA;
+		var A = Math.floor(t * span);
+		var B = Math.min(A + 1, span + 1);
+		this.blendT = (t * span) - A;
 
-		if(this.imageB == span + 1) {
-			this.blendT = 1.0; //very last step needs to end at A:0, B:1
-			this.imageB = span;
+		//very last step needs to end at A:0, B:1			
+		if(B == span + 1) {
+			this.blendT = 1.0; 
+			B = span;
 		}
-		
-		var styleA = this.images[this.imageA].style;
-		var styleB = this.images[this.imageB].style;
-
-		styleA.visibility =
-		styleB.visibility = "visible";
-		
-		styleA.opacity = 1.0;
-		styleB.opacity = this.blendT;
-
-		this._fixImageSize(this.images[this.imageA]);
-		this._fixImageSize(this.images[this.imageB]);
-		
-		this.imageT = t;
+		this.imageA = this.images[A];
+		this.imageB = this.images[B];		
+		this.sliderT = t;
+		this._draw();
 	}
 
-	static initDOM() {
+	static initDOM() {		
 		//NOTE: This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
-		//TODO: There might be a better solution for this. Like for instance canvas rendering.
 	  	var data = {};
 	  	data.dothething=function() {
 			data.mixers = [];
-			Array.prototype.filter.call( document.getElementsByTagName("pixel-mix"), function(el) {
-				this.push(new PixelMix(el));
-			}.bind(this.mixers));
-			Array.prototype.filter.call( document.getElementsByClassName("pixel-mix"), function(el) {
-				this.push(new PixelMix(el));
-			}.bind(this.mixers));
-			window.removeEventListener("load", this.dothething);
+			Array.prototype.filter.call( document.getElementsByTagName("pixel-mix"), function(el) 	{ this.push(new PixelMix(el)); }.bind(this.mixers));
+			Array.prototype.filter.call( document.getElementsByClassName("pixel-mix"), function(el) { this.push(new PixelMix(el)); }.bind(this.mixers));
 		}.bind(data);
-		window.addEventListener("load", data.dothething);
+		window.addEventListener("DOMContentLoaded", data.dothething);		
+		//data.dothething();
 		return data.mixers;
 	}
 
-	//helper nonsense
-
-	_noselect(style) {
-		style["-webkit-user-select"] = "none";  // Chrome, Safari
-		style["-moz-user-select"] = "none";		//Firefox
-		style["-ms-user-select"] = "none"; 		// IE 10+
-		style["user-select"] = "none";
+	_resize() {
+		//NOTE: resize and getBoundingClientRect() does not work until the window.load() event is fired. DOMContentLoaded doesn't cut it.
+		var w = this.images[0].naturalWidth;
+		var h = this.images[0].naturalHeight;
+		var aspect = h / Math.max(1.0, w);			
+		
+		var rect = this.frame.getBoundingClientRect();		
+		this.canvas.width = Math.abs(rect.right - rect.left);
+		this.canvas.height = this.canvas.width * aspect;
+		this._draw();
 	}
 
-	_fixImageSize(img) {
-		if(img !== this.images[0]) {			
-			var rect = this.images[0].getBoundingClientRect();
-			if( rect.top == rect.bottom || rect.left == rect.right ) return;
-
-			img.style.left = rect.left;
-			img.style.top =  rect.top;
-			img.style.width =  Math.abs(rect.right - rect.left);
-			img.style.height = Math.abs(rect.top - rect.bottom);
-		}
+	_draw() {
+		var context = this.context;
+		context.globalCompositeOperation = "source-over";
+		if(this.imageA) context.drawImage(this.imageA, 0, 0, this.canvas.width, this.canvas.height);
+		context.globalAlpha = this.blendT;
+		if(this.imageB) context.drawImage(this.imageB, 0, 0, this.canvas.width, this.canvas.height);
+		context.globalAlpha = 1.0;
 	}
 }
 

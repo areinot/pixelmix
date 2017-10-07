@@ -2,20 +2,78 @@
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 <head>
-	<title>gif mixer</title>
+	<title>Pixel Mix</title>
 	<script src="pixelmix.js"></script> 
 </head>
-<body bgcolor="#222">	
-	<div class="pixel-mix" id="mypano" style="width: 100%">				<!-- class makes it a mixer, id links it to the slider below -->
-		<img src="data/panohdri_00.png" width="100%" height="auto"/>	<!-- First size defines every image size -->
-		<img src="data/panohdri_02.png"/>
-		<img src="data/panohdri_04.png"/>
-		<img src="data/panohdri_06.png"/>
-		<img src="data/panohdri_08.png"/>
-		<img src="data/panohdri_10.png"/>
-		<img src="data/panohdri_12.png"/>
+<body style="background-color: #222; color: #ddd; font-family: verdana">
+	<h2>Resize me! I'm so responsive.</h2>	
+	
+	One slider to rule them all!
+	<input id="shared-slider" type="range" min="0" max="100" value="50" style="width: 100%;"/>	
+
+	<div 
+		class="pixel-mix" 
+		slider-id="shared-slider"
+		style="width: 100%; border: 1px solid gray;"
+		images='[
+			"data/panohdri_00.png",
+			"data/panohdri_01.png",
+			"data/panohdri_02.png",
+			"data/panohdri_03.png",
+			"data/panohdri_04.png",
+			"data/panohdri_05.png",
+			"data/panohdri_06.png",
+			"data/panohdri_07.png",
+			"data/panohdri_08.png",
+			"data/panohdri_09.png",
+			"data/panohdri_10.png",
+			"data/panohdri_11.png",
+			"data/panohdri_12.png"]'>
+	<center>You can put text and stuff here.<br>If you think you need to...<p></center>
 	</div>
-	<input id="mypano-slider" type="range" min="0" max="100" value="50" style="width: 100%"/>	
+
+	<div
+		class="pixel-mix"
+		slider-id="shared-slider"
+		style="width: 980px; height: 490px; border: 1px solid grey; padding: 40px; background-color: #444"
+		images='[
+			"data/panohdri_00.png",
+			"data/panohdri_01.png",
+			"data/panohdri_02.png",
+			"data/panohdri_03.png",
+			"data/panohdri_04.png",
+			"data/panohdri_05.png",
+			"data/panohdri_06.png",
+			"data/panohdri_07.png",
+			"data/panohdri_08.png",
+			"data/panohdri_09.png",
+			"data/panohdri_10.png",
+			"data/panohdri_11.png",
+			"data/panohdri_12.png"]'>
+	</div>	
+	
+	<center>
+	<div 
+		class="pixel-mix"
+		slider-id="second-slider"
+		style="max-width: 490px; border: 1px solid grey; margin: 30px;"
+		images='[
+			"data/panohdri_00.png",
+			"data/panohdri_01.png",
+			"data/panohdri_02.png",
+			"data/panohdri_03.png",
+			"data/panohdri_04.png",
+			"data/panohdri_05.png",
+			"data/panohdri_06.png",
+			"data/panohdri_07.png",
+			"data/panohdri_08.png",
+			"data/panohdri_09.png",
+			"data/panohdri_10.png",
+			"data/panohdri_11.png",
+			"data/panohdri_12.png"]'>
+			<input id="second-slider" type="range" min="0" max="100" value="50" style="width: 100%;"/>
+			</div>		
+	</center>
 
 	<script> PixelMix.initDOM(); </script> <!-- Call once per page -->
 </body>
