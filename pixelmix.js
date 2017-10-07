@@ -40,11 +40,9 @@ class PixelMix { //@@@ extends HTMLElement {
 		}
 		
 		//CANVAS
-		this.frame = document.createElement('div'); 		
-		if(!fancyDefined(this.frame)) {
-			console.error("Pixel-Mix Error: failed to create canvas frame div.");
-		}
-		this.frame.style = { width:"100%", height:"100%" };
+		this.frame = document.createElement('div');		
+		this.frame.style.width = "100%";
+		this.frame.style.height = "100%";
 		this.element.insertBefore(this.frame, this.element.firstChild);
 
 
