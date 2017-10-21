@@ -47,24 +47,61 @@ class PixelMix { //@@@ extends HTMLElement {
 		this.frame.style.bottom = 0;
 		this.element.insertBefore(this.frame, this.element.firstChild);
 
-
 		this.canvas = document.createElement('canvas');
 		this.context = this.canvas.getContext('2d');
 		this.frame.appendChild(this.canvas);
 				
 		//SLIDER
-		this.slider = this.element.getAttribute("slider-id");
-		if(fancyDefined(this.slider)) {
-			this.slider = document.getElementById(this.slider);
-			if(fancyDefined(this.slider)) {
-				this.slider.min = 0;
-				this.slider.max = 100;
-				this.slider.value = this.slider.max * this.sliderT;		
-				this.slider.addEventListener("input", function(ev) {				
-					this.setMix(this.slider.value * 0.01);
-				}.bind(this));
-			}
-		}
+		this.slider = document.createElement("input");
+		this.frame.appendChild(this.slider);
+		this.slider.type = "range";
+		this.slider.style.position = "relative";
+		this.slider.style.bottom = 40;
+		this.slider.style.marginLeft =
+		this.slider.style.marginRight = "auto";
+		this.slider.style.width = "50%";		
+		this.slider.style.height = 30;
+		this.slider.style.display = "block";
+		//this.slider.className = "pixel-mix-slider";	
+		
+		this.slider.style["focus"] = "none";
+		this.slider.style["-webkit-appearance"] = "none";
+		this.slider.style.background = "green";
+		//this.slider.style["-webkit-slider-thumb"]["-webkit-appearance"] = "none";
+		/*
+input[type=range] {
+  -webkit-appearance: none; // Hides the slider so that custom slider can be made
+  width: 100%; // Specific width is required for Firefox.
+  background: transparent; // therwise white in Chrome
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; // Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though.
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+//Hides the slider so custom styles can be added
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+		*/
+		
+
+		//SLIDER FUNCTION
+		this.slider.min = 0;
+		this.slider.max = 100;
+		this.slider.value = this.slider.max * this.sliderT;
+		this.slider.addEventListener("input", function(ev) {
+			this.setMix(this.slider.value * 0.01);
+		}.bind(this));
 
 		//FINALIZE
 		//pick images and make sure they draw once the resources are loaded
@@ -114,7 +151,7 @@ class PixelMix { //@@@ extends HTMLElement {
 		var h = this.images[0].naturalHeight;
 		var aspect = h / Math.max(1.0, w);			
 		
-		var rect = this.frame.getBoundingClientRect();		
+		var rect = this.frame.getBoundingClientRect();
 		this.canvas.width = Math.abs(rect.right - rect.left);
 		this.canvas.height = this.canvas.width * aspect;
 		this._draw();
