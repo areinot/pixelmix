@@ -56,19 +56,18 @@ class PixelMix { //@@@ extends HTMLElement {
 		this.frame.appendChild(this.slider);
 		this.slider.type = "range";
 		this.slider.style.position = "relative";
+		this.slider.style.display = "block";
 		this.slider.style.bottom = 40;
 		this.slider.style.marginLeft =
-		this.slider.style.marginRight = "auto";
+		this.slider.style.marginRight = "auto";		
 		this.slider.style.width = "50%";		
-		this.slider.style.height = 30;
-		this.slider.style.display = "block";
-		//this.slider.className = "pixel-mix-slider";	
-		
+		this.slider.style.height = 30;		
+		this.slider.className = "pixel-mix-slider";	
+		/*
 		this.slider.style["focus"] = "none";
 		this.slider.style["-webkit-appearance"] = "none";
-		this.slider.style.background = "green";
-		//this.slider.style["-webkit-slider-thumb"]["-webkit-appearance"] = "none";
-		/*
+		this.slider.style.background = "green";		
+		
 input[type=range] {
   -webkit-appearance: none; // Hides the slider so that custom slider can be made
   width: 100%; // Specific width is required for Firefox.
