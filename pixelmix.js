@@ -17,14 +17,17 @@ class PixelMix { //@@@ extends HTMLElement {
 		this.blendT = 0.0;		//interpolant between image A and image B
 
 		this.slider = null;		//external slider DOM element, if specified
-		this.sliderT = 0.5;		//interpolant between the first image and the last
-		
+				
 		//DOM	
 		if(!fancyDefined(element)) {
 			console.error("Pixel-Mix Error: No DOM element found.");
 			return;
 		}
 		this.element = element;
+
+		this.sliderT = element.getAttribute("slider-start");
+		if(fancyDefined(this.sliderT))	this.sliderT = Number.parseFloat(this.sliderT);
+		else 							this.sliderT = 0.5;
 
 		//IMAGES		
 		var imagesAttrib = this.element.getAttribute("images");
