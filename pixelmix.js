@@ -91,8 +91,15 @@ class PixelMix { //@@@ extends HTMLElement {
 		this._draw();
 	}
 
-	static initDOM() {		
-		//NOTE: This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
+	static initDOM() {
+		//Load a pile of slider styling into the header
+		var css = document.createElement("link");
+		css.rel = "stylesheet";
+		css.href = "slider.css";
+		css.type = "text/css";
+		document.head.insertBefore(css, document.head.firstChild);
+
+		//This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
 	  	var data = {};
 	  	data.dothething=function() {
 			data.mixers = [];
@@ -106,13 +113,14 @@ class PixelMix { //@@@ extends HTMLElement {
 
 	_resize() {
 		//NOTE: resize and getBoundingClientRect() does not work until the window.load() event is fired. DOMContentLoaded doesn't cut it.
-		var w = this.images[0].naturalWidth * 1000;
-		var h = this.images[0].naturalHeight * 1000;
-		var aspect = h / Math.max(1.0, w);			
-		console.log("@@@ w: " + w + "\th:" + h + "\taspect: " + aspect);
+		var w = this.images[0].naturalWidth;
+		var h = this.images[0].naturalHeight;
+		var aspect = h / Math.max(1.0, w);
 		var rect = this.frame.getBoundingClientRect();
 		this.canvas.width = Math.abs(rect.right - rect.left);
 		this.canvas.height = this.canvas.width * aspect;
+		this.element.style.height = this.canvas.height + "px";
+		this.frame.style.height = this.canvas.height + "px";
 		this._draw();
 	}
 
