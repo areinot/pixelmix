@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
@@ -5,14 +6,28 @@
 	<title>Pixel Mix</title>
 	<script src="pixelmix.js"></script> 
 	<style>
-		input[type=range] {
-			-webkit-appearance: none;			
+		.pixel-mix {
+			background: red;
+		}
+		div.pixel-mix-frame {
+			position: relative;
+			left: 0px;
+			right: 0px;
+			top: 0px;
+			bottom: 0px;
+			padding: 0px 0px 0px 0px;
+		}
+		input.pixel-mix-slider[type=range] {			
+			position: absolute;
+			-webkit-appearance: none;
 			-moz-appearance: none;
 			-ms-appearance: none;
 			background: none;
-			width: 100%;
+			width: 30%;
+			left: 35%;			
+			bottom: 4%;			
 		}
-		input[type=range]:focus {
+		input.pixel-mix-slider[type=range]:focus {
 			outline: none;
 		}
 		
@@ -29,7 +44,7 @@
 		input.pixel-mix-slider[type=range]::-moz-range-track {
 			animate: 0.2s;
 			height: 18px;
-			cursor: pointer;				
+			cursor: pointer;
 			border-radius: 12px;
 			padding-left: 2px;
 			padding-right: 2px;
@@ -44,7 +59,7 @@
 			background: rgba(0,0,0,0.5);
 			border: 1px solid rgba(255,255,255,0.25);
 		}
-				
+
 		/*Track Hover*/
 		input[type=range]:hover::-moz-range-track {			
 			background: rgba(0,0,0,0.5);
@@ -99,12 +114,12 @@
 		}
 	</style>	
 </head>
-<body style="background-color: #222; color: #ddd; font-family: verdana">
+<body style="background-color: #222; color: #ddd; font-family: verdana; padding: 0">
 	<h2>Resize me! I'm so responsive.</h2>	
 	<div 
 		class="pixel-mix" 
 		slider-id="shared-slider"
-		style="width: 100%; border: 1px solid gray;"
+		style="width: 100%;"
 		images='[
 			"data/panohdri_00.png",
 			"data/panohdri_01.png",
@@ -118,14 +133,12 @@
 			"data/panohdri_09.png",
 			"data/panohdri_10.png",
 			"data/panohdri_11.png",
-			"data/panohdri_12.png"]'>
-	<center>You can put text and stuff here.<br>If you think you need to...<p></center>
-	</div>
-
+			"data/panohdri_12.png"]'></div>
+	<p>
 	<div
 		class="pixel-mix"
 		slider-id="shared-slider"
-		style="width: 980px; height: 490px; border: 1px solid grey; padding: 40px; background-color: #444"
+		style="width: 980px; height: 490px; padding: 40px; background-color: #444"
 		images='[
 			"data/panohdri_00.png",
 			"data/panohdri_01.png",
@@ -141,12 +154,12 @@
 			"data/panohdri_11.png",
 			"data/panohdri_12.png"]'>
 	</div>	
-	
+	</p>
 	<center>
 	<div 
 		class="pixel-mix"
 		slider-id="second-slider"
-		style="max-width: 490px; border: 1px solid grey; margin: 30px;"
+		style="max-width: 490px; margin: 30px;"
 		images='[
 			"data/panohdri_00.png",
 			"data/panohdri_01.png",
@@ -160,7 +173,7 @@
 			"data/panohdri_09.png",
 			"data/panohdri_10.png",
 			"data/panohdri_11.png",
-			"data/panohdri_12.png"]'></div>		
+			"data/panohdri_12.png"]'></div>
 	</center>
 
 	<script> PixelMix.initDOM(); </script> <!-- Call once per page -->
