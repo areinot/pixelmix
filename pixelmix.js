@@ -98,11 +98,11 @@ class PixelMix { //@@@ extends HTMLElement {
 		//Load a pile of slider styling into the header
 		var css = document.createElement("link");
 		css.rel = "stylesheet";
-		css.href = "slider.css";
+		css.href = "pixelmix.css";
 		css.type = "text/css";
 		document.head.insertBefore(css, document.head.firstChild);
 
-		//This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
+		//NOTE: This is run after the whole page is done loading because getBoundingClientRect() doesn't work before that
 	  	var data = {};
 	  	data.dothething=function() {
 			data.mixers = [];
@@ -110,7 +110,6 @@ class PixelMix { //@@@ extends HTMLElement {
 			Array.prototype.filter.call( document.getElementsByClassName("pixel-mix"), function(el) { this.push(new PixelMix(el)); }.bind(this.mixers));
 		}.bind(data);
 		window.addEventListener("DOMContentLoaded", data.dothething);		
-		//data.dothething();
 		return data.mixers;
 	}
 
