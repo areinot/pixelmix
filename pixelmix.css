@@ -1,0 +1,108 @@
+div.pixel-mix {	
+}
+div.pixel-mix-frame {
+	position: relative;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+}
+input.pixel-mix-slider[type=range] {			
+	position: absolute;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	background: none;
+	width: 30%;
+	left: 35%;			
+	bottom: 4%;			
+}
+input.pixel-mix-slider[type=range]:focus {
+	outline: none;
+}
+
+/*Track*/
+
+input.pixel-mix-slider[type=range]::-webkit-slider-runnable-track {
+	animate: 0.2s;
+	height: 20px;
+	cursor: pointer;				
+	border-radius: 12px;
+	padding: 2px;
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.25);			
+}
+input.pixel-mix-slider[type=range]::-moz-range-track {
+	animate: 0.2s;
+	height: 18px;
+	cursor: pointer;
+	border-radius: 12px;
+	padding-left: 2px;
+	padding-right: 2px;
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.25);
+}
+input.pixel-mix-slider[type=range]::-ms-track {
+	animate: 0.2s;
+	height: 18px;
+	cursor: pointer;
+	border-radius: 12px;
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.25);
+}
+
+/*Track Hover*/
+
+input.pixel-mix-slider[type=range]:hover::-moz-range-track {			
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.5);
+}
+input.pixel-mix-slider[type=range]:hover::-webkit-slider-runnable-track {
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.5);
+}
+input.pixel-mix-slider[type=range]:hover::-ms-track {
+	background: rgba(0,0,0,0.5);
+	border: 1px solid rgba(255,255,255,0.5);
+}
+
+/*Thumb*/
+
+input.pixel-mix-slider[type=range]::-webkit-slider-thumb {			
+	-webkit-appearance: none;
+	height: 14px;
+	width: 14px;
+	border-radius: 8px;			
+	cursor: pointer;
+	background: rgba(255,255,255,0.25);			
+	border: none;
+}
+input.pixel-mix-slider[type=range]::-moz-range-thumb {
+	height: 14px;
+	width: 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	background: rgba(255,255,255,0.25);
+	border: none;			
+}
+input.pixel-mix-slider[type=range]::-ms-thumb {
+	height: 14px;
+	width: 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	background: rgba(255,255,255,0.25);
+	border: none;
+	margin: 3px;
+}
+
+/*Thumb Hover*/
+
+input.pixel-mix-slider[type=range]:hover::-moz-range-thumb {
+	background: rgba(255,255,255,0.5);
+}
+input.pixel-mix-slider[type=range]:hover::-webkit-slider-thumb {
+	background: rgba(255,255,255,0.5);
+}
+input.pixel-mix-slider[type=range]:hover::-ms-thumb {
+	background: rgba(255,255,255,0.5);
+}
