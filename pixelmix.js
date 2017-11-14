@@ -67,8 +67,21 @@ class PixelMix { //@@@ extends HTMLElement {
 		this.slider.style["focus"] = "none";
 		this.slider.style["-webkit-appearance"] = "none";
 		this.slider.style.background = "green";
+
+		this.slider.style["[type=range]::-moz-range-thumb"].background = "yellow";
 		//this.slider.style["-webkit-slider-thumb"]["-webkit-appearance"] = "none";
 		/*
+
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+////
+
 input[type=range] {
   -webkit-appearance: none; // Hides the slider so that custom slider can be made
   width: 100%; // Specific width is required for Firefox.
